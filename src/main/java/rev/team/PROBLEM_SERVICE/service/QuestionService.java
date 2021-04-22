@@ -47,4 +47,8 @@ public class QuestionService {
     public void submitQuestion(Long id, Question question) {
         //TODO: 해당 문제 정답 체크해서 기록하기
     }
+
+    public List<Question> testService(Long start ,Long end){
+        return questionRepository.findByIdIsBetween(start,end);
+    }
 }

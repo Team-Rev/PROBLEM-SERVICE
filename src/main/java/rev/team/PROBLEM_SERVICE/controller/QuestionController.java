@@ -60,9 +60,9 @@ public class QuestionController {
         return questionService.submitTestQuestions(questions);
     }
 
-
-
-
-
+    @GetMapping("/testRange")
+    public List<Question> testRange(@RequestParam("start") Long start, @RequestParam("end") Long end){
+        return questionService.testService(start, end);
+    }
 
 }

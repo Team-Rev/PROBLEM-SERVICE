@@ -17,7 +17,9 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 @Table(name="answer_deatil")
 public class AnswerDeatil {
+    //기록 상세
     //한 문제씩 푸는것도 여기다가 저장할 예정
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

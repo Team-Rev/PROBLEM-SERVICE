@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="answer_main")
 public class AnswerMain {
+    //기록 메인
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
