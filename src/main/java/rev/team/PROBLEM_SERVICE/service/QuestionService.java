@@ -3,9 +3,13 @@ package rev.team.PROBLEM_SERVICE.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rev.team.PROBLEM_SERVICE.domain.entity.AnswerMain;
 import rev.team.PROBLEM_SERVICE.domain.entity.Question;
+import rev.team.PROBLEM_SERVICE.domain.entity.Submit;
+import rev.team.PROBLEM_SERVICE.domain.entity.SubmitDTO;
 import rev.team.PROBLEM_SERVICE.domain.repository.QuestionRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +42,15 @@ public class QuestionService {
         return new ArrayList<>();
     }
 
-    public String submitTestQuestions(List<Question> questions) {
-        //TODO: 진단 평가 문제 푼거 받아서 처리
+    public String submitQuestions(SubmitDTO submit) {
+        List<Submit> submits = submit.getSubmitList();
+        AnswerMain main = AnswerMain.builder()
+            .userId(submit.getUserId())
+            .date(LocalDateTime.now())
+            .totalCount(submits.size())
+            .build();
+
+
         return "200";
     }
 
@@ -48,7 +59,8 @@ public class QuestionService {
         //TODO: 해당 문제 정답 체크해서 기록하기
     }
 
-    public List<Question> testService(Long start ,Long end){
+    //문제 ID 범위로 가져오기
+    public List<Question> rangeQuestions(Long start ,Long end){
         return questionRepository.findByIdIsBetween(start,end);
     }
 }

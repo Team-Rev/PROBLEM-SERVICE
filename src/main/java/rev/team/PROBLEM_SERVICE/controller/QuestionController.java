@@ -1,12 +1,11 @@
 package rev.team.PROBLEM_SERVICE.controller;
 
-import ch.qos.logback.classic.Logger;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import rev.team.PROBLEM_SERVICE.domain.entity.Question;
+import rev.team.PROBLEM_SERVICE.domain.entity.Submit;
+import rev.team.PROBLEM_SERVICE.domain.entity.SubmitDTO;
 import rev.team.PROBLEM_SERVICE.service.QuestionService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -35,7 +34,6 @@ public class QuestionController {
         return "200"; //맞았는지 틀렸는지 보내야 함
     }
 
-    //문제는 10개씩 반환하는 걸로
     //랜덤으로 풀 문제 리스트
     @GetMapping("/randomQuestions")
     public List<Question> getRandomQuestions(){
@@ -56,13 +54,14 @@ public class QuestionController {
 
     //문제 제출
     @PostMapping("/submit")
-    public String submitTestQuestions(@RequestBody List<Question> questions){
-        return questionService.submitTestQuestions(questions);
+    public String submitTestQuestions(@RequestBody List<SubmitDTO> answers){
+        return questionService.submitQuestions(answers);
     }
 
-    @GetMapping("/testRange")
-    public List<Question> testRange(@RequestParam("start") Long start, @RequestParam("end") Long end){
-        return questionService.testService(start, end);
+    //아이디 범위 정해서 문제 가져오기
+    @GetMapping("/rangeQuestion")
+    public List<Question> rangeQuestions(@RequestParam("start") Long start, @RequestParam("end") Long end){
+        return questionService.rangeQuestions(start, end);
     }
 
 }
