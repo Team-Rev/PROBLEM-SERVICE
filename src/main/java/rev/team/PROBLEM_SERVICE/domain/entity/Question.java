@@ -25,7 +25,7 @@ public class Question {
     private String exam;
 
     @Column(columnDefinition = "TEXT")
-    private String wrong_answer;
+    private String wrongAnswer;
 
     @Column(columnDefinition = "TEXT")
     private String answer;

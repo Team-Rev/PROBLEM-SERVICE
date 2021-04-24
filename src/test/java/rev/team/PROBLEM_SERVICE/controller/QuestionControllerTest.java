@@ -3,10 +3,18 @@ package rev.team.PROBLEM_SERVICE.controller;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import rev.team.PROBLEM_SERVICE.domain.entity.AnswerMain;
+import rev.team.PROBLEM_SERVICE.domain.entity.Submit;
+import rev.team.PROBLEM_SERVICE.domain.entity.SubmitDTO;
+import rev.team.PROBLEM_SERVICE.service.QuestionService;
+import rev.team.PROBLEM_SERVICE.util.GradingManager;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,6 +26,12 @@ class QuestionControllerTest {
     int port;
 
     TestRestTemplate client = new TestRestTemplate();
+
+    @MockBean
+    private GradingManager gradingManager;
+
+    @MockBean
+    private QuestionService questionService;
 
     @DisplayName("1. Get question")
     @Test
@@ -37,5 +51,24 @@ class QuestionControllerTest {
         assertNotNull(result);
     }
 
+    @DisplayName("3. Submit question")
+    @Test
+    void test3(){
+        List<Submit> list = new ArrayList<>();
+        list.add(Submit.builder()
+                .questionId(260L)
+                .answer("test")
+                .build());
 
+        SubmitDTO submit = SubmitDTO.builder()
+                .userId(1L)
+                .submitList(list)
+                .build();
+
+        AnswerMain result = client.postForObject("http://localhost:" + port + "/submit"
+                , submit
+                , AnswerMain.class);
+
+        System.out.println(result.getTotalCount() + ", " + result.getCorrectCount());
+    }
 }

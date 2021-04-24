@@ -1,6 +1,7 @@
 package rev.team.PROBLEM_SERVICE.controller;
 
 import org.springframework.web.bind.annotation.*;
+import rev.team.PROBLEM_SERVICE.domain.entity.AnswerMain;
 import rev.team.PROBLEM_SERVICE.domain.entity.Question;
 import rev.team.PROBLEM_SERVICE.domain.entity.Submit;
 import rev.team.PROBLEM_SERVICE.domain.entity.SubmitDTO;
@@ -54,7 +55,7 @@ public class QuestionController {
 
     //문제 제출
     @PostMapping("/submit")
-    public String submitTestQuestions(@RequestBody List<SubmitDTO> answers){
+    public AnswerMain submitTestQuestions(@RequestBody SubmitDTO answers){
         return questionService.submitQuestions(answers);
     }
 

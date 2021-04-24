@@ -1,26 +1,32 @@
 package rev.team.PROBLEM_SERVICE.service;
 
 
+import org.jboss.jandex.Main;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rev.team.PROBLEM_SERVICE.domain.entity.AnswerMain;
-import rev.team.PROBLEM_SERVICE.domain.entity.Question;
-import rev.team.PROBLEM_SERVICE.domain.entity.Submit;
-import rev.team.PROBLEM_SERVICE.domain.entity.SubmitDTO;
+import rev.team.PROBLEM_SERVICE.domain.entity.*;
+import rev.team.PROBLEM_SERVICE.domain.repository.AnswerDetailRepository;
 import rev.team.PROBLEM_SERVICE.domain.repository.QuestionRepository;
+import rev.team.PROBLEM_SERVICE.util.GradingManager;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
-
+    private final GradingManager gradingManager;
+    private final AnswerDetailRepository answerDetailRepository;
     @Autowired
-    public QuestionService(QuestionRepository questionRepository){
+    public QuestionService(QuestionRepository questionRepository
+            , GradingManager gradingManager
+            , AnswerDetailRepository answerDetailRepository){
         this.questionRepository = questionRepository;
+        this.gradingManager = gradingManager;
+        this.answerDetailRepository = answerDetailRepository;
     }
 
     //한 문제 가져오기
@@ -42,16 +48,24 @@ public class QuestionService {
         return new ArrayList<>();
     }
 
-    public String submitQuestions(SubmitDTO submit) {
+    public AnswerMain submitQuestions(SubmitDTO submit) {
         List<Submit> submits = submit.getSubmitList();
+        List<AnswerDeatil> details = new ArrayList<>();
         AnswerMain main = AnswerMain.builder()
             .userId(submit.getUserId())
             .date(LocalDateTime.now())
             .totalCount(submits.size())
             .build();
 
+        for(Submit s : submits){
+            Optional<Question> temp = questionRepository.findById(s.getQuestionId());
+            temp.ifPresent(question -> details.add(gradingManager.grading(s, question, main.getUserId())));
+        }
 
-        return "200";
+
+        main.setCorrectCount( (int)details.stream().filter(AnswerDeatil::isCorrect).count() );
+        answerDetailRepository.saveAll(details);
+        return main;
     }
 
 
