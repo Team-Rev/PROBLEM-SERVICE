@@ -1,31 +1,27 @@
 package rev.team.PROBLEM_SERVICE.service;
 
 
-import org.jboss.jandex.Main;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rev.team.PROBLEM_SERVICE.domain.entity.*;
 import rev.team.PROBLEM_SERVICE.domain.repository.AnswerDetailRepository;
 import rev.team.PROBLEM_SERVICE.domain.repository.QuestionRepository;
-import rev.team.PROBLEM_SERVICE.util.GradingManager;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
-    private final GradingManager gradingManager;
     private final AnswerDetailRepository answerDetailRepository;
     @Autowired
     public QuestionService(QuestionRepository questionRepository
-            , GradingManager gradingManager
             , AnswerDetailRepository answerDetailRepository){
         this.questionRepository = questionRepository;
-        this.gradingManager = gradingManager;
         this.answerDetailRepository = answerDetailRepository;
     }
 
@@ -59,7 +55,8 @@ public class QuestionService {
 
         for(Submit s : submits){
             Optional<Question> temp = questionRepository.findById(s.getQuestionId());
-            temp.ifPresent(question -> details.add(gradingManager.grading(s, question, main.getUserId())));
+
+            temp.ifPresent(question -> details.add(this.grading(s, question, main.getUserId())));
         }
 
 
@@ -76,5 +73,22 @@ public class QuestionService {
     //문제 ID 범위로 가져오기
     public List<Question> rangeQuestions(Long start ,Long end){
         return questionRepository.findByIdIsBetween(start,end);
+    }
+
+    public AnswerDeatil grading(Submit submit, Question question, Long answerMainId){
+        Boolean isCorrect = true;
+
+        Set<String> answers = submit.getAnswer();
+        Set<MultipleChoice> choiceSet = question.getChoices();
+
+        for(String answer : answers){
+            isCorrect = isCorrect && choiceSet.stream().filter(e -> e.getChoice().equals(answer)).findFirst().orElse(new MultipleChoice()).getIsCorrect();
+        }
+        return AnswerDeatil.builder()
+                .questionId(submit.getQuestionId())
+                .answerMainId(answerMainId)
+                .choose(submit.getAnswer())
+                .isCorrect(isCorrect)
+                .build();
     }
 }

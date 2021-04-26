@@ -7,7 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.context.annotation.EnableMBeanExport;
+
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,14 +26,18 @@ public class Question {
     private String exam;
 
     @Column(columnDefinition = "TEXT")
-    private String wrongAnswer;
+    private String mainCategory;
 
     @Column(columnDefinition = "TEXT")
-    private String answer;
+    private String subCategory;
 
     @ColumnDefault("0")
     private Long totalCount;
 
     @ColumnDefault("0")
     private Long rightAnswerCount;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "question_id", foreignKey = @ForeignKey(name="id"))
+    private Set<MultipleChoice> choices;
 }

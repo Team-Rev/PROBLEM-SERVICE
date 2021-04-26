@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,5 +16,5 @@ import javax.persistence.Entity;
 public class Submit {
 
     private Long questionId;
-    private String answer;
+    private Set<String> answer;
 }
