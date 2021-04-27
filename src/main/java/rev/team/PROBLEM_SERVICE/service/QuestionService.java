@@ -7,11 +7,8 @@ import rev.team.PROBLEM_SERVICE.domain.entity.*;
 import rev.team.PROBLEM_SERVICE.domain.repository.AnswerDetailRepository;
 import rev.team.PROBLEM_SERVICE.domain.repository.QuestionRepository;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class QuestionService {
@@ -45,24 +42,25 @@ public class QuestionService {
     }
 
     public AnswerMain submitQuestions(SubmitDTO submit) {
-        List<Submit> submits = submit.getSubmitList();
-        List<AnswerDeatil> details = new ArrayList<>();
-        AnswerMain main = AnswerMain.builder()
-            .userId(submit.getUserId())
-            .date(LocalDateTime.now())
-            .totalCount(submits.size())
-            .build();
-
-        for(Submit s : submits){
-            Optional<Question> temp = questionRepository.findById(s.getQuestionId());
-
-            temp.ifPresent(question -> details.add(this.grading(s, question, main.getUserId())));
-        }
-
-
-        main.setCorrectCount( (int)details.stream().filter(AnswerDeatil::isCorrect).count() );
-        answerDetailRepository.saveAll(details);
-        return main;
+        System.out.println(submit.toString());
+//        List<Submit> submits = submit.getSubmitList();
+//        List<AnswerDeatil> details = new ArrayList<>();
+//        AnswerMain main = AnswerMain.builder()
+//            .userId(submit.getUserId())
+//            .date(LocalDateTime.now())
+//            .totalCount(submits.size())
+//            .build();
+//
+//        for(Submit s : submits){
+//            Optional<Question> temp = questionRepository.findById(s.getQuestionId());
+//
+//            temp.ifPresent(question -> details.add(this.grading(s, question, main.getUserId())));
+//        }
+//
+//
+//        main.setCorrectCount( (int)details.stream().filter(AnswerDeatil::isCorrect).count() );
+//        answerDetailRepository.saveAll(details);
+        return AnswerMain.builder().build();//main;
     }
 
 
@@ -75,20 +73,20 @@ public class QuestionService {
         return questionRepository.findByIdIsBetween(start,end);
     }
 
-    public AnswerDeatil grading(Submit submit, Question question, Long answerMainId){
-        Boolean isCorrect = true;
-
-        Set<String> answers = submit.getAnswer();
-        Set<MultipleChoice> choiceSet = question.getChoices();
-
-        for(String answer : answers){
-            isCorrect = isCorrect && choiceSet.stream().filter(e -> e.getChoice().equals(answer)).findFirst().orElse(new MultipleChoice()).getIsCorrect();
-        }
-        return AnswerDeatil.builder()
-                .questionId(submit.getQuestionId())
-                .answerMainId(answerMainId)
-                .choose(submit.getAnswer())
-                .isCorrect(isCorrect)
+    public AnswerDetail grading(Submit submit, Question question, Long answerMainId){
+//        Boolean isCorrect = true;
+//
+//        Set<String> answers = submit.getAnswer();
+//        Set<MultipleChoice> choiceSet = question.getChoices();
+//
+//        for(String answer : answers){
+//            isCorrect = isCorrect && choiceSet.stream().filter(e -> e.getChoice().equals(answer)).findFirst().orElse(new MultipleChoice()).getIsCorrect();
+//        }
+        return AnswerDetail.builder()
+//                .questionId(submit.getQuestionId())
+//                .answerMainId(answerMainId)
+//                .choose(submit.getAnswer())
+//                .isCorrect(isCorrect)
                 .build();
     }
 }

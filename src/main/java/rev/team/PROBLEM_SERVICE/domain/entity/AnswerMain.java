@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,4 +30,6 @@ public class AnswerMain {
 
     private int correctCount; // 맞힌 문제 갯수
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "answerMain")
+    private Set<AnswerDetail> details; // 선택한 답안
 }

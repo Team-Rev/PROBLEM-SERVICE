@@ -16,5 +16,5 @@ import java.util.Set;
 public class Submit {
 
     private Long questionId;
-    private Set<String> answer;
+    private Set<Long> multipleChoiceIds;
 }
