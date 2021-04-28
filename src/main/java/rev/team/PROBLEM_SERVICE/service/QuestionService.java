@@ -20,17 +20,19 @@ public class QuestionService {
     private final MultipleChoiceRepository multipleChoiceRepository;
     private final AnswerMainRepository answerMainRepository;
     private final AnswerDetailRepository answerDetailRepository;
+    private final AnswerChoiceRepository answerChoiceRepository;
 
     @Autowired
     public QuestionService(QuestionRepository questionRepository
             , MultipleChoiceRepository multipleChoiceRepository
             , AnswerMainRepository answerMainRepository
-            , AnswerDetailRepository answerDetailRepository){
+            , AnswerDetailRepository answerDetailRepository, AnswerChoiceRepository answerChoiceRepository){
 
         this.questionRepository = questionRepository;
         this.multipleChoiceRepository = multipleChoiceRepository;
         this.answerMainRepository = answerMainRepository;
         this.answerDetailRepository = answerDetailRepository;
+        this.answerChoiceRepository = answerChoiceRepository;
     }
 
     //한 문제 가져오기
@@ -52,47 +54,52 @@ public class QuestionService {
         return new ArrayList<>();
     }
 
-    @Transactional
     public AnswerMain submitQuestions(SubmitDTO submit) {
-        List<Submit> submits = submit.getSubmitList();
-        List<AnswerDetail> details = new ArrayList<>();
+        Set<Submit> submits = submit.getSubmitList();
+        Set<AnswerDetail> details = new HashSet<>();
 
         AnswerMain main = AnswerMain.builder()
+            .id(answerMainRepository.count()+1)
             .userId(submit.getUserId())
             .date(LocalDateTime.now())
             .totalCount(submits.size())
             .build();
-        answerMainRepository.save(main);
-
+        answerMainRepository.saveAndFlush(main);
         boolean nowCorrect;
         Set<AnswerChoice> answerChoiceHashSet;
         for(Submit nowSubmit : submits) {
             answerChoiceHashSet = new HashSet<>();
             nowCorrect = true;
             AnswerDetail detail = AnswerDetail.builder()
+                    .id(answerDetailRepository.count()+1)
                     .questionId(nowSubmit.getQuestionId())
-                    .answerMainId(main.getId())
+                    .answerMain(main)
                     .build();
-            answerDetailRepository.save(detail);
+            answerDetailRepository.saveAndFlush(detail);
             for(Long choiceId : nowSubmit.getMultipleChoiceIds()){
-                System.out.println(choiceId + ", " + nowSubmit.getQuestionId());
                 MultipleChoice choice = multipleChoiceRepository.findByIdAndQuestionId(choiceId, nowSubmit.getQuestionId()).orElse(null);
                 if(choice == null){
                     nowCorrect = false;
                     break;
                 }
                 nowCorrect = nowCorrect && choice.getIsCorrect();
-                answerChoiceHashSet.add(AnswerChoice.builder()
-                        .answerDetailId(detail.getId())
+                AnswerChoice answerChoice = AnswerChoice.builder()
+                        .answerChoiceId(answerChoiceRepository.count()+1)
+                        .answerDetail(detail)
                         .multipleChoiceId(choiceId)
-                        .build());
+                        .build();
+                answerChoiceRepository.saveAndFlush(answerChoice);
+
+                answerChoiceHashSet.add(answerChoice);
             }
             detail.setCorrect(nowCorrect);
             detail.setChoices(answerChoiceHashSet);
+            answerDetailRepository.saveAndFlush(detail);
             details.add(detail);
         }
-        answerMainRepository.updateCorrect((int)details.stream().filter(AnswerDetail::isCorrect).count(), main.getId());
-        answerDetailRepository.saveAll(details);
+        main.setCorrectCount((int)details.stream().filter(AnswerDetail::isCorrect).count());
+        main.setDetails(details);
+        answerMainRepository.saveAndFlush(main);
         return main;
     }
 
@@ -106,20 +113,4 @@ public class QuestionService {
         return questionRepository.findByIdIsBetween(start,end);
     }
 
-    public AnswerDetail grading(Submit submit, Question question, Long answerMainId){
-//        Boolean isCorrect = true;
-//
-//        Set<String> answers = submit.getAnswer();
-//        Set<MultipleChoice> choiceSet = question.getChoices();
-//
-//        for(String answer : answers){
-//            isCorrect = isCorrect && choiceSet.stream().filter(e -> e.getChoice().equals(answer)).findFirst().orElse(new MultipleChoice()).getIsCorrect();
-//        }
-        return AnswerDetail.builder()
-//                .questionId(submit.getQuestionId())
-//                .answerMainId(answerMainId)
-//                .choose(submit.getAnswer())
-//                .isCorrect(isCorrect)
-                .build();
-    }
 }

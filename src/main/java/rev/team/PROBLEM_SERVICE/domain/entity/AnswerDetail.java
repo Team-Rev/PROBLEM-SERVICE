@@ -3,18 +3,22 @@ package rev.team.PROBLEM_SERVICE.domain.entity;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.Objects;
 import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = false, exclude = {"answerMain", "choices"})
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
+@ToString(exclude = {"answerMain", "choices"})
 @Builder
 
 @Entity
@@ -24,20 +28,19 @@ public class AnswerDetail {
     //한 문제씩 푸는것도 여기다가 저장할 예정
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "detail_id")
     private Long id;
 
     private Long questionId; // 문제 ID
 
     private boolean isCorrect; //정답 여부 필요할 것 같음
 
-    private Long answerMainId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "answerMainId", insertable=false, updatable=false)
+    @ManyToOne
+    @JoinColumn(name="main_id")
     @JsonIgnore
     private AnswerMain answerMain;
 
-    @OneToMany(mappedBy = "detail", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "answerDetail")
     private Set<AnswerChoice> choices; // 선택한 답안
+
 }

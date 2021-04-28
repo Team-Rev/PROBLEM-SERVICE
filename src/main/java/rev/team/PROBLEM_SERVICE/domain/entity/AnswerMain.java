@@ -1,9 +1,6 @@
 package rev.team.PROBLEM_SERVICE.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,7 +8,10 @@ import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = false, exclude = "details")
+@ToString(exclude = "details")
 @Builder
 @Entity
 @Table(name="answer_main")
@@ -19,7 +19,7 @@ public class AnswerMain {
     //기록 메인
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "main_id")
     private Long id;
 
     private Long userId; // 푼 사용자 ID
@@ -30,6 +30,6 @@ public class AnswerMain {
 
     private int correctCount; // 맞힌 문제 갯수
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "answerMain")
+    @OneToMany(mappedBy = "answerMain")
     private Set<AnswerDetail> details; // 선택한 답안
 }

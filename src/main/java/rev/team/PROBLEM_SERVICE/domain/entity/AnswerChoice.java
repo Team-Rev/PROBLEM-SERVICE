@@ -1,31 +1,35 @@
 package rev.team.PROBLEM_SERVICE.domain.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = false, exclude = "answerDetail")
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
+@ToString(exclude = "answerDetail")
 @Builder
 @Entity
 @Table(name = "answer_choice")
-public class AnswerChoice implements Serializable{
+public class AnswerChoice {
 
     @Id
-    private Long answerDetailId;
+    private Long answerChoiceId;
 
-    @Id
     private Long multipleChoiceId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "answerDetailId", insertable=false, updatable=false)
+    @ManyToOne
+    @JoinColumn(name="detail_id")
     @JsonIgnore
-    private AnswerDetail detail;
+    private AnswerDetail answerDetail;
+
 }

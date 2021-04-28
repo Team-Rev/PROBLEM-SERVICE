@@ -1,6 +1,7 @@
 package rev.team.PROBLEM_SERVICE.domain.entity;
 
 import java.util.List;
+import java.util.Set;
 
 
 import lombok.AllArgsConstructor;
@@ -17,5 +18,5 @@ public class SubmitDTO {
 
     private Long userId;
 
-    List<Submit> submitList;
+    Set<Submit> submitList;
 }
