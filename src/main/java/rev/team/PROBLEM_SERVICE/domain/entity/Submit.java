@@ -6,8 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import java.util.Set;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,5 +15,5 @@ import java.util.Set;
 public class Submit {
 
     private Long questionId;
-    private Set<Long> multipleChoiceIds;
+    private List<Long> multipleChoiceIds;
 }

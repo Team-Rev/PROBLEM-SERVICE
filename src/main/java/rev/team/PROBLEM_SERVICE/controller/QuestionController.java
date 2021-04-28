@@ -3,7 +3,6 @@ package rev.team.PROBLEM_SERVICE.controller;
 import org.springframework.web.bind.annotation.*;
 import rev.team.PROBLEM_SERVICE.domain.entity.AnswerMain;
 import rev.team.PROBLEM_SERVICE.domain.entity.Question;
-import rev.team.PROBLEM_SERVICE.domain.entity.Submit;
 import rev.team.PROBLEM_SERVICE.domain.entity.SubmitDTO;
 import rev.team.PROBLEM_SERVICE.service.QuestionService;
 

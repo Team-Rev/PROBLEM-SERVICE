@@ -4,21 +4,32 @@ package rev.team.PROBLEM_SERVICE.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rev.team.PROBLEM_SERVICE.domain.entity.*;
-import rev.team.PROBLEM_SERVICE.domain.repository.AnswerDetailRepository;
-import rev.team.PROBLEM_SERVICE.domain.repository.QuestionRepository;
+import rev.team.PROBLEM_SERVICE.domain.repository.*;
 
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
+    private final MultipleChoiceRepository multipleChoiceRepository;
+    private final AnswerMainRepository answerMainRepository;
     private final AnswerDetailRepository answerDetailRepository;
+
     @Autowired
     public QuestionService(QuestionRepository questionRepository
+            , MultipleChoiceRepository multipleChoiceRepository
+            , AnswerMainRepository answerMainRepository
             , AnswerDetailRepository answerDetailRepository){
+
         this.questionRepository = questionRepository;
+        this.multipleChoiceRepository = multipleChoiceRepository;
+        this.answerMainRepository = answerMainRepository;
         this.answerDetailRepository = answerDetailRepository;
     }
 
@@ -41,26 +52,48 @@ public class QuestionService {
         return new ArrayList<>();
     }
 
+    @Transactional
     public AnswerMain submitQuestions(SubmitDTO submit) {
-        System.out.println(submit.toString());
-//        List<Submit> submits = submit.getSubmitList();
-//        List<AnswerDeatil> details = new ArrayList<>();
-//        AnswerMain main = AnswerMain.builder()
-//            .userId(submit.getUserId())
-//            .date(LocalDateTime.now())
-//            .totalCount(submits.size())
-//            .build();
-//
-//        for(Submit s : submits){
-//            Optional<Question> temp = questionRepository.findById(s.getQuestionId());
-//
-//            temp.ifPresent(question -> details.add(this.grading(s, question, main.getUserId())));
-//        }
-//
-//
-//        main.setCorrectCount( (int)details.stream().filter(AnswerDeatil::isCorrect).count() );
-//        answerDetailRepository.saveAll(details);
-        return AnswerMain.builder().build();//main;
+        List<Submit> submits = submit.getSubmitList();
+        List<AnswerDetail> details = new ArrayList<>();
+
+        AnswerMain main = AnswerMain.builder()
+            .userId(submit.getUserId())
+            .date(LocalDateTime.now())
+            .totalCount(submits.size())
+            .build();
+        answerMainRepository.save(main);
+
+        boolean nowCorrect;
+        Set<AnswerChoice> answerChoiceHashSet;
+        for(Submit nowSubmit : submits) {
+            answerChoiceHashSet = new HashSet<>();
+            nowCorrect = true;
+            AnswerDetail detail = AnswerDetail.builder()
+                    .questionId(nowSubmit.getQuestionId())
+                    .answerMainId(main.getId())
+                    .build();
+            answerDetailRepository.save(detail);
+            for(Long choiceId : nowSubmit.getMultipleChoiceIds()){
+                System.out.println(choiceId + ", " + nowSubmit.getQuestionId());
+                MultipleChoice choice = multipleChoiceRepository.findByIdAndQuestionId(choiceId, nowSubmit.getQuestionId()).orElse(null);
+                if(choice == null){
+                    nowCorrect = false;
+                    break;
+                }
+                nowCorrect = nowCorrect && choice.getIsCorrect();
+                answerChoiceHashSet.add(AnswerChoice.builder()
+                        .answerDetailId(detail.getId())
+                        .multipleChoiceId(choiceId)
+                        .build());
+            }
+            detail.setCorrect(nowCorrect);
+            detail.setChoices(answerChoiceHashSet);
+            details.add(detail);
+        }
+        answerMainRepository.updateCorrect((int)details.stream().filter(AnswerDetail::isCorrect).count(), main.getId());
+        answerDetailRepository.saveAll(details);
+        return main;
     }
 
 
