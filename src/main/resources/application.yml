@@ -9,6 +9,9 @@ spring:
       enabled: true
   jpa:
     show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
     hibernate:
       ddl-auto: update # 새로 추가한 옵션 Entity Class 기반으로 Table 생성
     generate-ddl: true

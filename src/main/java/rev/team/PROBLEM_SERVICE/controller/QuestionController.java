@@ -3,6 +3,7 @@ package rev.team.PROBLEM_SERVICE.controller;
 import org.springframework.web.bind.annotation.*;
 import rev.team.PROBLEM_SERVICE.domain.entity.AnswerMain;
 import rev.team.PROBLEM_SERVICE.domain.entity.Question;
+import rev.team.PROBLEM_SERVICE.domain.entity.SelectChoiceDTO;
 import rev.team.PROBLEM_SERVICE.domain.entity.SubmitDTO;
 import rev.team.PROBLEM_SERVICE.service.QuestionService;
 
@@ -59,9 +60,14 @@ public class QuestionController {
     }
 
     //아이디 범위 정해서 문제 가져오기
-    @GetMapping("/rangeQuestion")
+    @GetMapping("/rangeQuestions")
     public List<Question> rangeQuestions(@RequestParam("start") Long start, @RequestParam("end") Long end){
         return questionService.rangeQuestions(start, end);
     }
 
+    //아이디 리스트 받아서 문제 가져오기
+    @PostMapping("/selectQuestions")
+    public List<Question> rangeQuestions(@RequestBody SelectChoiceDTO selectChoiceDTO){
+        return questionService.getSelectQuestions(selectChoiceDTO.getIds());
+    }
 }

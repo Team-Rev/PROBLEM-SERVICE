@@ -17,7 +17,7 @@ import java.util.Set;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false, exclude = {"answerMain", "choices"})
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 @ToString(exclude = {"answerMain", "choices"})
 @Builder
 
@@ -28,15 +28,15 @@ public class AnswerDetail {
     //한 문제씩 푸는것도 여기다가 저장할 예정
 
     @Id
-    @Column(name = "detail_id")
-    private Long id;
+    @Column(name = "answer_detail_id")
+    private Long answerDetailId;
 
     private Long questionId; // 문제 ID
 
     private boolean isCorrect; //정답 여부 필요할 것 같음
 
     @ManyToOne
-    @JoinColumn(name="main_id")
+    @JoinColumn(name="answer_main_id")
     @JsonIgnore
     private AnswerMain answerMain;
 

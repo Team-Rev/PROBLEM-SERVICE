@@ -19,8 +19,8 @@ public class AnswerMain {
     //기록 메인
 
     @Id
-    @Column(name = "main_id")
-    private Long id;
+    @Column(name = "answer_main_id")
+    private Long answerMainId;
 
     private Long userId; // 푼 사용자 ID
 

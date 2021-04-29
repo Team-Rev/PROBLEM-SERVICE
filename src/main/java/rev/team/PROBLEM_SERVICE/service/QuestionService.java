@@ -8,10 +8,7 @@ import rev.team.PROBLEM_SERVICE.domain.repository.*;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class QuestionService {
@@ -59,7 +56,7 @@ public class QuestionService {
         Set<AnswerDetail> details = new HashSet<>();
 
         AnswerMain main = AnswerMain.builder()
-            .id(answerMainRepository.count()+1)
+            .answerMainId(answerMainRepository.count()+1)
             .userId(submit.getUserId())
             .date(LocalDateTime.now())
             .totalCount(submits.size())
@@ -71,7 +68,7 @@ public class QuestionService {
             answerChoiceHashSet = new HashSet<>();
             nowCorrect = true;
             AnswerDetail detail = AnswerDetail.builder()
-                    .id(answerDetailRepository.count()+1)
+                    .answerDetailId(answerDetailRepository.count()+1)
                     .questionId(nowSubmit.getQuestionId())
                     .answerMain(main)
                     .build();
@@ -113,4 +110,11 @@ public class QuestionService {
         return questionRepository.findByIdIsBetween(start,end);
     }
 
+    //문제 ID 선택해서 가져오기
+    public List<Question> getSelectQuestions(Set<Long> ids) {
+        List<Question> questions = new ArrayList<>();
+        for(Long id : ids) questionRepository.findById(id).ifPresent(questions::add);
+
+        return questions;
+    }
 }
