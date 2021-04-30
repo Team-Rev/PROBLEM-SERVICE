@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 
 public class SubmitDTO {
 
-    private Long userId;
+    private String userId;
 
     private Set<Submit> submitList;
 }

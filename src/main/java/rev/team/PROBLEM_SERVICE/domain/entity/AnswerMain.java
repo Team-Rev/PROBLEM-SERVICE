@@ -22,7 +22,7 @@ public class AnswerMain {
     @Column(name = "answer_main_id")
     private Long answerMainId;
 
-    private Long userId; // 푼 사용자 ID
+    private String userId; // 푼 사용자 ID
 
     private LocalDateTime date; // 문제 푼 날
 
