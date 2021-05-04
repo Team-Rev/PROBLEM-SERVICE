@@ -10,6 +10,7 @@ import rev.team.PROBLEM_SERVICE.service.QuestionService;
 import java.util.List;
 import java.util.Set;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class QuestionController {
     private final QuestionService questionService;
