@@ -9,7 +9,6 @@ import rev.team.PROBLEM_SERVICE.service.AnswerService;
 
 import java.util.List;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class AnswerController {
 

@@ -112,6 +112,7 @@ public class QuestionService {
 
     //문제 ID 선택해서 가져오기
     public List<Question> getSelectQuestions(Set<Long> ids) {
+        System.out.println(Arrays.toString(ids.toArray()) );
         List<Question> questions = new ArrayList<>();
         for(Long id : ids) questionRepository.findById(id).ifPresent(questions::add);
 
