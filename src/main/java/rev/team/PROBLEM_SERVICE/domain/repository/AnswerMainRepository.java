@@ -17,6 +17,6 @@ public interface AnswerMainRepository extends JpaRepository<AnswerMain, Long> {
     @Query("UPDATE AnswerMain main SET main.correctCount = :count WHERE main.id = :id")
     void updateCorrect(int count, Long id);
 
-    List<AnswerSummary> findAllByUserId(String userId);
+    List<AnswerMain> findAllByUserId(String userId);
 
 }
