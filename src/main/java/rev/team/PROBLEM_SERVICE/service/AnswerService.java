@@ -28,12 +28,11 @@ public class AnswerService {
     }
 
     public List<AnswerMain> getAnswerSummary(String id) {
-        return answerMainRepository.findAllByUserId(id);
+        return answerMainRepository.findAllByUserIdOrderByAnswerMainIdDesc(id);
     }
 
     public List<ResultSummary> getResult(String id) {
-        List<AnswerMain> answerMains = answerMainRepository.findAllByUserId(id);
-
+        List<AnswerMain> answerMains = answerMainRepository.findAllByUserIdOrderByAnswerMainIdDesc(id);
         List<ResultSummary> result = new ArrayList<>();
 
         for(AnswerMain answerMain : answerMains){
