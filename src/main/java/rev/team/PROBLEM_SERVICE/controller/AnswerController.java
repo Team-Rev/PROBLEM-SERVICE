@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import rev.team.PROBLEM_SERVICE.domain.entity.AnswerMain;
 import rev.team.PROBLEM_SERVICE.domain.entity.ResultSummary;
+import rev.team.PROBLEM_SERVICE.domain.mapping.AnswerSummary;
 import rev.team.PROBLEM_SERVICE.service.AnswerService;
 
 import java.util.List;
@@ -24,8 +25,8 @@ public class AnswerController {
     }
 
     @GetMapping("/answer/summary")
-    public List<AnswerMain> getAnswerSummary(@RequestParam("id") String id){
-        return answerService.getAnswerSummary(id);
+    public List<AnswerSummary> getAnswerSummary(@RequestParam("id") String id, @RequestParam("page") Integer page){
+        return answerService.getAnswerSummary(id, page);
     }
 
     @GetMapping("/answer/result")

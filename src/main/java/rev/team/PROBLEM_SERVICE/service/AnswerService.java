@@ -1,11 +1,15 @@
 package rev.team.PROBLEM_SERVICE.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import rev.team.PROBLEM_SERVICE.domain.entity.AnswerDetail;
 import rev.team.PROBLEM_SERVICE.domain.entity.AnswerMain;
 import rev.team.PROBLEM_SERVICE.domain.entity.Question;
 import rev.team.PROBLEM_SERVICE.domain.entity.ResultSummary;
+import rev.team.PROBLEM_SERVICE.domain.mapping.AnswerSummary;
 import rev.team.PROBLEM_SERVICE.domain.repository.AnswerMainRepository;
 import rev.team.PROBLEM_SERVICE.domain.repository.QuestionRepository;
 
@@ -27,8 +31,9 @@ public class AnswerService {
         return answerMainRepository.findById(id).orElse(null);
     }
 
-    public List<AnswerMain> getAnswerSummary(String id) {
-        return answerMainRepository.findAllByUserIdOrderByAnswerMainIdDesc(id);
+    public List<AnswerSummary> getAnswerSummary(String id, Integer page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.Direction.DESC, "answerMainId");
+        return answerMainRepository.findAllByUserId(id, pageable);
     }
 
     public List<ResultSummary> getResult(String id) {
