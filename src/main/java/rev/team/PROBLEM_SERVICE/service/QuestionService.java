@@ -114,9 +114,7 @@ public class QuestionService {
             now.setExamCount(now.getExamCount()+1);
             now.setTotalQuestionCount(now.getTotalQuestionCount()+total);
             now.setTotalCorrectCount(now.getTotalCorrectCount()+correct);
-            int average = ( now.getCorrectAverage() * (now.getExamCount()-1) ) // 역대 정답률 합 재계산
-                    + (int) ((float) correct / (float)total * 100) ; // 이번 정답률 추가
-            now.setCorrectAverage( (int)((float)average/ (float)now.getExamCount() ) );// 다시 평균 계산
+            now.setCorrectAverage( (int)((float)now.getTotalCorrectCount()/ (float)now.getTotalQuestionCount() *100) );// 다시 평균 계산
             answerTotalRepository.save(now);
         }else{
             answerTotalRepository.save(AnswerTotal.builder()

@@ -71,9 +71,10 @@ public class QuestionController {
     }
 
     //TODO: 제출 시에 기록 종합 계속 업데이트(Complete)
+    // 정답률 계산 로직 수정
     //TODO: 문제 제출시에 AnswerMain에 핵심 카테고리 생성(Complete)
     //TODO: Answermain 요악 리스트(10개씩 받아오도록)(Complete)
+    //TODO: answermain ID 받아서 문제 기록 가공하기(현재 프론트에서 처리중인거 백엔드로 옮기기)(Complete)
 
-    //TODO: answermain ID 받아서 문제 기록 가공하기(현재 프론트에서 처리중인거 백엔드로 옮기기)
     //TODO: 처음 로딩 시에 (기록 종합, AnswerMain 요약 리스트 첫 페이지 전송)
 }
