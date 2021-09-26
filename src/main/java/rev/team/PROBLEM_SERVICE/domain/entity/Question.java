@@ -41,6 +41,6 @@ public class Question {
     private Set<MultipleChoice> choices;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id", updatable = false, insertable = false)
+    @JoinColumn(name = "question_id", updatable = false, insertable = false)
     private List<RelationCategory> relationCategories;
 }

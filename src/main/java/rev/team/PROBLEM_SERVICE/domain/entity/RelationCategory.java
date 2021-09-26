@@ -16,5 +16,5 @@ public class RelationCategory {
     @EmbeddedId
     private RelationCategoryId id;
 
-    private int score;
+    private float score;
 }

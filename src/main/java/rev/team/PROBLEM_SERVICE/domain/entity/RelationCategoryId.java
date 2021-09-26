@@ -16,12 +16,11 @@ import java.io.Serializable;
 @Embeddable
 public class RelationCategoryId implements Serializable {
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name ="id")
+    @JoinColumn(name ="question_id")
     private Question question;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name ="id")
+    @JoinColumn(name ="category_id")
     private Category category;
-
 
 }
