@@ -2,17 +2,16 @@ package rev.team.PROBLEM_SERVICE.domain.entity;
 
 import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 @Entity
 @Table(name="question")
@@ -40,4 +39,8 @@ public class Question {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "question_id", foreignKey = @ForeignKey(name="id"))
     private Set<MultipleChoice> choices;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "question_id", updatable = false, insertable = false)
+    private List<RelationCategory> relationCategories;
 }
